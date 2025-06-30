@@ -1,0 +1,415 @@
+{
+  "users": [
+    {
+      "username": "alice",
+      "id": "1",
+      "avatar": "https://i.pravatar.cc/150?u=bob",
+      "role": "admin"
+    },
+    {
+      "id": "2",
+      "username": "bob",
+      "avatar": "https://i.pravatar.cc/150?u=bob",
+      "role": "user"
+    },
+    {
+      "id": "3",
+      "username": "charlie",
+      "avatar": "https://i.pravatar.cc/150?u=charlie",
+      "role": "user"
+    },
+    {
+      "id": "2275dd7b-9f89-4567-a6ca-ca85444f99e1",
+      "username": "jake",
+      "avatar": "https://i.abcnewsfe.com/a/10669fab-5a56-4555-8012-0b3d83369352/avatar-the-way-of-water-07-ht-jt-220907_1662579296232_hpMain_1x1.jpg?w=608",
+      "role": "admin"
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "title": "Cámara DSLR Canon EOS 90D",
+      "description": "Cuerpo + lente 18-135 mm, 32.5 MP, vídeo 4K",
+      "image": "https://picsum.photos/id/1011/400/300",
+      "basePrice": 500,
+      "duration": {
+        "years": 0,
+        "months": 0,
+        "weeks": 0,
+        "days": 0,
+        "hours": 2,
+        "minutes": 0,
+        "seconds": 0
+      },
+      "state": "active",
+      "auction": {
+        "startTime": "",
+        "endTime": "",
+        "currentPrice": 11233,
+        "bids": [
+          {
+            "userId": "1",
+            "amount": 11232,
+            "timestamp": "2025-06-30T04:39:30.024Z"
+          },
+          {
+            "userId": "1",
+            "amount": 11233,
+            "timestamp": "2025-06-30T04:39:53.232Z"
+          }
+        ],
+        "winnerId": "1"
+      },
+      "chat": [
+        {
+          "userId": "1",
+          "message": "Hola",
+          "timestamp": "2025-06-30T04:29:16.440Z"
+        },
+        {
+          "userId": "1",
+          "message": "Hola",
+          "timestamp": "2025-06-30T04:40:09.316Z"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "MacBook Pro 14” M5",
+      "description": "Chip M3 Pro, 18 GB RAM, 1 TB SSD",
+      "image": "https://picsum.photos/id/1025/400/300",
+      "basePrice": 1500,
+      "duration": {
+        "years": 0,
+        "months": 0,
+        "weeks": 0,
+        "days": 0,
+        "hours": 0
+      },
+      "state": "past",
+      "auction": {
+        "startTime": "",
+        "endTime": "",
+        "currentPrice": 0,
+        "bids": [],
+        "winnerId": null
+      },
+      "chat": []
+    },
+    {
+      "id": "3",
+      "title": "Retro Console SNES Mini",
+      "description": "Edición clásica con 21 juegos pre-instalados",
+      "image": "https://picsum.photos/id/1062/400/300",
+      "basePrice": 80,
+      "duration": {
+        "years": 0,
+        "months": 0,
+        "weeks": 0,
+        "days": 0,
+        "hours": 0
+      },
+      "state": "future",
+      "auction": {
+        "startTime": "2025-06-28T23:40:00Z",
+        "endTime": "2025-06-28T23:41:30Z",
+        "currentPrice": 92,
+        "bids": [
+          {
+            "userId": "2",
+            "amount": 85,
+            "timestamp": "2025-06-28T23:40:30Z"
+          },
+          {
+            "userId": "2",
+            "amount": 92,
+            "timestamp": "2025-06-28T23:41:00Z"
+          }
+        ],
+        "winnerId": "2"
+      },
+      "chat": [
+        {
+          "userId": "2",
+          "message": "Siempre quise esta consola 😍",
+          "timestamp": "2025-06-28T23:40:35Z"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Auriculares Sony WH-1000XM5",
+      "description": "Cancelación de ruido, 30 h batería",
+      "image": "https://picsum.photos/id/1084/400/300",
+      "basePrice": 350,
+      "duration": {
+        "years": 0,
+        "months": 0,
+        "weeks": 0,
+        "days": 0,
+        "hours": 2
+      },
+      "state": "future",
+      "auction": {
+        "startTime": "2025-06-29T02:00:00Z",
+        "endTime": "2025-06-29T02:03:00Z",
+        "currentPrice": 360,
+        "bids": [
+          {
+            "userId": "3",
+            "amount": 360,
+            "timestamp": "2025-06-29T02:02:00Z"
+          }
+        ],
+        "winnerId": "3"
+      },
+      "chat": []
+    },
+    {
+      "id": "5",
+      "title": "Nintendo Switch OLED",
+      "description": "Pantalla OLED 7”, 64 GB almacenamiento",
+      "image": "https://picsum.photos/id/180/400/300",
+      "basePrice": 300,
+      "duration": {
+        "years": 0,
+        "months": 0,
+        "weeks": 0,
+        "days": 0,
+        "hours": 0
+      },
+      "state": "future",
+      "auction": {
+        "startTime": "",
+        "endTime": "",
+        "currentPrice": 0,
+        "bids": [],
+        "winnerId": null
+      },
+      "chat": []
+    },
+    {
+      "id": "6",
+      "title": "iPhone 15 Pro",
+      "description": "Chip A17, 256 GB, Ceramic Shield",
+      "image": "https://picsum.photos/id/1060/400/300",
+      "basePrice": 999,
+      "duration": {
+        "years": 0,
+        "months": 0,
+        "weeks": 0,
+        "days": 0,
+        "hours": 0
+      },
+      "state": "past",
+      "auction": {
+        "startTime": "",
+        "endTime": "",
+        "currentPrice": 0,
+        "bids": [],
+        "winnerId": null
+      },
+      "chat": []
+    },
+    {
+      "id": "7",
+      "title": "Samsung Galaxy S24 Ultra",
+      "description": "Cámara 200 MP, 5 000 mAh",
+      "image": "https://picsum.photos/id/1070/400/300",
+      "basePrice": 1199,
+      "duration": {
+        "years": 0,
+        "months": 0,
+        "weeks": 0,
+        "hours": 4
+      },
+      "state": "past",
+      "auction": {
+        "startTime": "",
+        "endTime": "",
+        "currentPrice": 0,
+        "bids": [],
+        "winnerId": null
+      },
+      "chat": []
+    },
+    {
+      "id": "8",
+      "title": "PlayStation 5 Digital Edition",
+      "description": "1 TB SSD, CPU AMD Zen 2",
+      "image": "https://picsum.photos/id/1040/400/300",
+      "basePrice": 499,
+      "duration": {
+        "years": 0,
+        "months": 2,
+        "weeks": 1,
+        "hours": 4
+      },
+      "state": "active",
+      "auction": {
+        "startTime": "",
+        "endTime": "",
+        "currentPrice": 504,
+        "bids": [
+          {
+            "userId": "1",
+            "amount": 44,
+            "timestamp": "2025-06-30T05:35:32.848Z"
+          },
+          {
+            "userId": "3",
+            "amount": 500,
+            "timestamp": "2025-06-30T07:04:26.895Z"
+          },
+          {
+            "userId": "3",
+            "amount": 501,
+            "timestamp": "2025-06-30T07:20:43.423Z"
+          },
+          {
+            "userId": "2",
+            "amount": 502,
+            "timestamp": "2025-06-30T07:25:46.411Z"
+          },
+          {
+            "userId": "3",
+            "amount": 503,
+            "timestamp": "2025-06-30T07:43:29.454Z"
+          },
+          {
+            "userId": "2",
+            "amount": 504,
+            "timestamp": "2025-06-30T07:43:42.820Z"
+          }
+        ],
+        "winnerId": "2"
+      },
+      "chat": [
+        {
+          "userId": "2",
+          "message": "505",
+          "timestamp": "2025-06-30T07:46:41.344Z"
+        }
+      ]
+    },
+    {
+      "id": "fbf7706b-3928-4979-bf50-0e50f14848a8",
+      "chat": [],
+      "auction": {
+        "startTime": "2025-06-30T01:25:18.349Z",
+        "endTime": "",
+        "currentPrice": 150,
+        "bids": [],
+        "winnerId": null
+      },
+      "title": "Prueba1",
+      "description": "Pruebaaaaaaaaaaa",
+      "image": "https://yt3.googleusercontent.com/ytc/AIdro_kGid9jQn1fZ1xSqxBV5Uksj_ELQN6RFPJ4awlsLL2X1t0=s900-c-k-c0x00ffffff-no-rj",
+      "basePrice": 150,
+      "durationSeconds": 120,
+      "state": "future"
+    }
+  ],
+  "productVisits": [
+    {
+      "id": "1",
+      "owner": "3",
+      "productId": "3"
+    },
+    {
+      "id": "1",
+      "owner": "3",
+      "productId": null
+    },
+    {
+      "id": "2",
+      "owner": "1",
+      "productId": "4"
+    },
+    {
+      "id": "2",
+      "owner": "1",
+      "productId": "3"
+    },
+    {
+      "id": "3",
+      "owner": "2",
+      "productId": "3"
+    },
+    {
+      "id": "3",
+      "owner": "2",
+      "productId": "4"
+    }
+  ],
+  "productBids": [
+    {
+      "id": "1",
+      "userId": "2",
+      "productId": "3",
+      "bidId": "b2"
+    },
+    {
+      "id": "2",
+      "userId": "3",
+      "productId": "4",
+      "bidId": "b3"
+    },
+    {
+      "id": "918c",
+      "userId": "1",
+      "productId": "1",
+      "bidId": "2025-06-30T04:39:30.024Z",
+      "timestamp": "2025-06-30T04:39:30.024Z"
+    },
+    {
+      "id": "117c",
+      "userId": "1",
+      "productId": "1",
+      "bidId": "2025-06-30T04:39:53.232Z",
+      "timestamp": "2025-06-30T04:39:53.232Z"
+    },
+    {
+      "id": "a0c1",
+      "userId": "3",
+      "productId": "8",
+      "bidId": "2025-06-30T07:04:26.895Z",
+      "timestamp": "2025-06-30T07:04:26.895Z"
+    },
+    {
+      "id": "7a20",
+      "userId": "2",
+      "productId": "8",
+      "bidId": "2025-06-30T07:25:46.411Z",
+      "timestamp": "2025-06-30T07:25:46.411Z"
+    },
+    {
+      "id": "29cc",
+      "userId": "3",
+      "productId": "8",
+      "bidId": "2025-06-30T07:43:29.454Z",
+      "timestamp": "2025-06-30T07:43:29.454Z"
+    },
+    {
+      "id": "1701",
+      "userId": "2",
+      "productId": "8",
+      "bidId": "2025-06-30T07:43:42.820Z",
+      "timestamp": "2025-06-30T07:43:42.820Z"
+    },
+    {
+      "id": "14c2",
+      "userId": "3",
+      "productId": "8",
+      "bidId": "2025-06-30T07:45:59.830Z",
+      "timestamp": "2025-06-30T07:45:59.830Z"
+    },
+    {
+      "id": "fe99",
+      "userId": "2",
+      "productId": "8",
+      "bidId": "2025-06-30T07:46:41.343Z",
+      "timestamp": "2025-06-30T07:46:41.343Z"
+    }
+  ]
+}
