@@ -1,77 +1,45 @@
 import express from "express";
 import cors from "cors";
+import bodyParser from "body-parser";
 
 const app = express();
-const PORT = 5010;
-
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
-// Almacenamiento simulado de productos
-const products = new Map();
+const PORT = 3001;
 
-// SSE para actualizaciones de pujas
-app.get("/api/bids/:productId", (req, res) => {
-  const productId = req.params.productId;
+let clients = [];
 
-  res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache");
-  res.setHeader("Connection", "keep-alive");
-  res.flushHeaders();
+app.get("/events", (req, res) => {
+  res.writeHead(200, {
+    Connection: "keep-alive",
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+  });
 
-  // Enviar datos iniciales del producto
-  const product = products.get(productId);
-  if (product) {
-    res.write(`event: init\ndata: ${JSON.stringify(product.auction)}\n\n`);
-  }
-
-  // Manejar cierre de conexión
-  res.on("close", () => {
-    // Lógica para manejar cierre de conexión
+  res.write(":ok\n\n");
+  clients.push(res);
+  req.on("close", () => {
+    clients = clients.filter((client) => client !== res);
   });
 });
 
-// Endpoint para manejar nuevas pujas
-app.post("/api/bid", (req, res) => {
-  const { productId, userId, amount, timestamp } = req.body;
-  if (!productId || !userId || !amount || !timestamp) {
-    return res.status(400).json({ error: "Campos requeridos faltantes" });
+function broadcastSSE(data) {
+  clients.forEach((client) => {
+    client.write(`data: ${JSON.stringify(data)}\n\n`);
+  });
+}
+
+app.post("/pujas", (req, res) => {
+  const { productId, userId, username, amount, timestamp } = req.body;
+  if (!productId || !userId || !username || !amount || !timestamp) {
+    return res.status(400).json({ mensaje: "Faltan campos requeridos" });
   }
-
-  // Actualizar producto con nueva puja
-  let product = products.get(productId);
-  if (!product) {
-    product = {
-      id: productId,
-      auction: {
-        currentPrice: 0,
-        bids: [],
-        startTime: new Date().toISOString(),
-        endTime: "",
-        winnerId: null,
-      },
-      chat: [],
-    };
-    products.set(productId, product);
-  }
-
-  // Validar puja
-  if (amount <= product.auction.currentPrice) {
-    return res.status(400).json({ error: "La puja debe ser mayor que el precio actual" });
-  }
-
-  // Registrar nueva puja
-  const newBid = { userId, amount, timestamp };
-  product.auction.bids.push(newBid);
-  product.auction.currentPrice = amount;
-  products.set(productId, product);
-
-  // Enviar notificación de nueva puja a clientes conectados
-  // Lógica para enviar notificación a clientes
-
-  res.status(200).json({ sent: true, bid: newBid });
+  const nuevaPuja = { productId, userId, username, amount, timestamp };
+  broadcastSSE({ tipo: "nueva_puja", puja: nuevaPuja });
+  res.status(201).json({ mensaje: "Puja creada y notificada", puja: nuevaPuja });
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor en ejecución en el puerto ${PORT}`);
+  console.log(`Servidor SSE corriendo en http://localhost:${PORT}`);
 });

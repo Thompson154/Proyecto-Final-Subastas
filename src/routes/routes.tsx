@@ -5,7 +5,7 @@ import ProtectedRoutes from "../guards/ProtectedRoutes";
 import LoadingPage from "../pages/LoadingPage";
 const Layout = React.lazy(() => import("../layout/Layout"));
 const HomePage = React.lazy(() => import("../pages/HomePage"));
-const ProductsPage = React.lazy(() => import("../pages/ProductsPage"));
+const UsersPage = React.lazy(() => import("../pages/UsersPage"));
 const ProductPage = React.lazy(() => import("../pages/ProductPage"));
 const LoginPage = React.lazy(() => import("../pages/LoginPage"));
 const RegisterPage = React.lazy(() => import("../pages/RegisterPage"));
@@ -27,7 +27,7 @@ export const AppRoutes = () => {
             }
           >
             <Route path="home" element={<HomePage />} />
-            <Route path="products" element={<ProductsPage />} />
+            <Route path="users" element={<UsersPage />} />
             <Route path="products/:productId" element={<ProductPage />} />
           </Route>
 

@@ -9,13 +9,11 @@ const ProductPage = () => {
   const { productId } = useParams<{ productId: string }>();
   const {
     selectedProduct,
-    isLoading,
     error,
     fetchProduct,
     handleBid,
     updateProduct,
   } = useProducts();
-  const [product, setProduct] = useState(null);
   const currentUser = useAuthStore((s) => s.user);
   const [bidAmount, setBidAmount] = useState(0);
   const [chatMessage, setChatMessage] = useState("");
@@ -26,33 +24,33 @@ const ProductPage = () => {
       fetchProduct(productId);
     }
 
-    // Set up SSE for real-time bid updates
     if (!productId) return;
-    const eventSource = new EventSource(`http://localhost:5010/api/bids/${productId}`);
-    eventSource.addEventListener("bid", (event) => {
+    const eventSource = new EventSource(`http://localhost:3001/events`);
+    eventSource.onmessage = (event) => {
       try {
-        const bid = JSON.parse(event.data);
-        if (selectedProduct) {
+        const data = JSON.parse(event.data);
+        if (data.tipo === "nueva_puja" && data.puja.productId === productId && selectedProduct) {
           updateProduct({
             ...selectedProduct,
             auction: {
               ...selectedProduct.auction,
-              currentPrice: bid.amount,
+              currentPrice: data.puja.amount,
               bids: [
                 ...selectedProduct.auction.bids,
                 {
-                  userId: bid.userId,
-                  amount: bid.amount,
-                  timestamp: bid.timestamp,
+                  userId: data.puja.userId,
+                  username: data.puja.username,
+                  amount: data.puja.amount,
+                  timestamp: data.puja.timestamp,
                 },
               ],
             },
           });
         }
       } catch (err) {
-        console.error("Error parsing SSE bid:", err);
+        console.error("Error parsing SSE event:", err);
       }
-    });
+    };
     eventSource.onerror = () => {
       console.error("SSE connection error");
       eventSource.close();
@@ -66,24 +64,7 @@ const ProductPage = () => {
     return () => {
       eventSource.close();
     };
-  }, [productId, fetchProduct]);
-
-  useEffect(() => {
-    const eventSource = new EventSource(`/api/bids/${productId}`);
-    eventSource.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.event === "init") {
-        setProduct((prevProduct) => ({
-          ...prevProduct,
-          auction: data.data,
-        }));
-      }
-      // Manejar otros eventos como "bid"
-    };
-    return () => {
-      eventSource.close();
-    };
-  }, [productId]);
+  }, [productId, fetchProduct, selectedProduct, updateProduct]);
 
   useEffect(() => {
     if (!selectedProduct) return;
@@ -167,14 +148,13 @@ const ProductPage = () => {
     }
     if (
       !selectedProduct ||
-      (bidAmount <= selectedProduct.auction.currentPrice &&
-        selectedProduct.basePrice)
+      bidAmount <= selectedProduct.auction.currentPrice
     ) {
       alert("La puja debe ser mayor que el precio actual.");
       return;
     }
     try {
-      await handleBid(currentUser.id, selectedProduct.id, bidAmount);
+      await handleBid(currentUser.id, currentUser.username, selectedProduct.id, bidAmount);
       setBidAmount(0);
     } catch (err) {
       alert("Error al realizar la puja. Inténtalo de nuevo.");
@@ -198,26 +178,26 @@ const ProductPage = () => {
       const newMessage = {
         userId: currentUser.id,
         message: chatMessage,
+        username: currentUser.username,
         timestamp: new Date().toISOString(),
       };
       const updatedProduct = {
         ...selectedProduct,
         chat: [...selectedProduct.chat, newMessage],
       };
-      await updateProduct(updatedProduct);
+      await updateProduct(updatedProduct as any);
       setChatMessage("");
     } catch (err) {
       alert("Error al enviar el mensaje. Inténtalo de nuevo.");
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center cardContainer-main">
-        <p>Cargando producto...</p>
-      </div>
-    );
-  }
+  // Find the winner (highest bid) when auction is past
+  const winner = selectedProduct?.state === "past" && selectedProduct?.auction.bids.length > 0
+    ? selectedProduct.auction.bids.reduce((prev, curr) =>
+        prev.amount > curr.amount ? prev : curr
+      )
+    : null;
 
   if (error || !selectedProduct) {
     return (
@@ -291,6 +271,13 @@ const ProductPage = () => {
                   Tiempo restante: {remainingTime}
                 </span>
               </div>
+              {selectedProduct.state === "past" && winner && (
+                <div className="mt-4">
+                  <span className="text-lg font-medium text-green-400">
+                    Ganador: {winner.username} con €{winner.amount}
+                  </span>
+                </div>
+              )}
               {selectedProduct.state === "active" && (
                 <div className="mt-4">
                   <label
@@ -304,20 +291,15 @@ const ProductPage = () => {
                       id="bid"
                       type="number"
                       value={bidAmount}
-                      onChange={(e) => {
-                        setBidAmount(Math.max(0, parseInt(e.target.value)));
-                        setChatMessage(e.target.value);
-                      }}
+                      onChange={(e) =>
+                        setBidAmount(Math.max(0, parseInt(e.target.value)))
+                      }
                       className="w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       min={selectedProduct.auction.currentPrice + 1}
                       step="1"
-                      
                     />
                     <button
-                      onClick={() => {
-                        handlePlaceBid();
-                        handleSendMessage();
-                      }}
+                      onClick={handlePlaceBid}
                       className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       disabled={
                         !bidAmount ||
@@ -337,8 +319,7 @@ const ProductPage = () => {
                   <ul className="mt-2 space-y-2">
                     {selectedProduct.auction.bids.map((bid, index) => (
                       <li key={index} className="text-sm text-gray-400">
-                        Puja de €{bid.amount} por usuario {bid.userId} (
-                        {bid.userId}: €{bid.amount} (
+                        Puja de €{bid.amount} por usuario {bid.username} (
                         {new Date(bid.timestamp).toLocaleString()})
                       </li>
                     ))}
@@ -347,9 +328,8 @@ const ProductPage = () => {
               )}
             </div>
           </div>
-          {/* Chat Section */}
           <div className="mt-6 lg:mt-0 lg:w-1/3 cardContainer-chat">
-            <h3 className="text-lg font-medium text-gray-300 mb-4">
+            <h3 className="text-lg font-medium text-gray-300 mb-4 mt-16">
               Chat en vivo
             </h3>
             <div className="bg-white/10 dark:bg-zinc-800/50 rounded-md p-4 h-64 overflow-y-auto">
@@ -357,7 +337,7 @@ const ProductPage = () => {
                 selectedProduct.chat.map((msg, index) => (
                   <div key={index} className="mb-2">
                     <p className="text-sm text-gray-400">
-                      <span className="font-semibold">{msg.userId}</span>:{" "}
+                      <span className="font-semibold">{msg.username}</span>:{" "}
                       {msg.message}
                     </p>
                     <p className="text-xs text-gray-500">

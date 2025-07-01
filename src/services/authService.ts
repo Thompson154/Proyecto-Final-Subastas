@@ -23,6 +23,34 @@ export const loginUser = async (username: string, role: string): Promise<User> =
 };
 
 
+export const getUsers = async (): Promise<User> => {
+  try {
+    const response = await jsonServerInstance.get("/users");
+    if (!response.data || response.data.length === 0) {
+      throw new Error('No se encontraron usuarios.');
+    }
+    console.log("Server response:", response.data);
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const errorMessage = (error.response?.data as ApiError)?.message || 'Credenciales incorrectas.';
+      throw new Error(errorMessage);
+    }
+    throw new Error('Error de conexión con el servidor.');
+  }
+};
+
+export const getUserById = async (id: string): Promise<User | null> => {
+  try {
+    const res = await jsonServerInstance.get(`/users/${id}`);
+    return res.data;
+  } catch (err) {
+    console.error(`Error fetching user ${id}:`, err);
+    return null;
+  }
+};
+
+
 export const createUser = async (user: User): Promise<User> => {
   try {
     const response = await jsonServerInstance.post("/users", user);

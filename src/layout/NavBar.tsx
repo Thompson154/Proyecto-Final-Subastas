@@ -37,7 +37,7 @@ export function NavbarComponent() {
 
   const navItems = [
     { name: "Products", link: "/app/home" },
-    { name: "Pricing", link: "/app/pricing" },
+    { name: "Users", link: "/app/users" },
     { name: "Contact", link: "/app/contact" },
   ];
 
@@ -172,7 +172,7 @@ export function NavbarComponent() {
   });
 
   return (
-    <div className="top-0 z-50 bg-white dark:bg-slate-900">
+    <div className="top-0 z-50 bg-white dark:bg-black">
       <Navbar>
         {/* Desktop Navigation */}
         <NavBody>

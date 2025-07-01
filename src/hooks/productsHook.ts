@@ -53,6 +53,10 @@ export const useProducts = () => {
     },
     validationSchema: productSchema,
     onSubmit: async (values) => {
+      const durationSeconds = values.duration.hours * 3600 +
+        values.duration.weeks * 604800 +
+        values.duration.months * 2592000 +
+        values.duration.years * 31536000;
       if (editingProduct) {
         await updateProduct({ 
           ...editingProduct, 
@@ -65,11 +69,12 @@ export const useProducts = () => {
           chat: [],
           auction: {
             startTime: new Date().toISOString(),
-            endTime: "",
+            endTime: new Date(Date.now() + durationSeconds * 1000).toISOString(),
             currentPrice: values.basePrice,
             bids: [],
             winnerId: null,
           },
+          durationSeconds,
           ...values,
         } as Product);
       }
@@ -112,11 +117,32 @@ export const useProducts = () => {
 
   const handleBid = async (
     userId: string,
+    username: string,
     productId: string,
     amount: number
   ) => {
-    const bid: Bid = { userId, amount, timestamp: new Date().toISOString() };
-    await bidProduct(userId, productId, bid);
+    try {
+      await fetchProduct(productId);
+      const product = products.find((p) => p.id === productId);
+      if (!product) throw new Error("Product not found");
+      if (amount <= product.auction.currentPrice) {
+        throw new Error("Bid must be higher than current price");
+      }
+      const bid: Bid = { userId, username, amount, timestamp: new Date().toISOString() };
+      await bidProduct(userId, productId, bid);
+      // Send bid to server for SSE broadcast
+      const response = await fetch(`http://localhost:3001/pujas`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId, ...bid }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to broadcast bid");
+      }
+    } catch (err) {
+      console.error("Error placing bid:", err);
+      throw err;
+    }
   };
 
   const visitProduct = async (userId: string, productId: string) => {
